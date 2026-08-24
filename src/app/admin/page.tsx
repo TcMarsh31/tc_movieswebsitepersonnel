@@ -2,8 +2,8 @@ import Link from "next/link";
 import { isAdminLoggedIn } from "@/lib/admin-auth";
 import { listAllTitlesForAdmin } from "@/lib/catalog";
 import type { TitleWithVideos } from "@/lib/types";
-import { adminLogoutAction, deleteTitleAction } from "./actions";
-import { AddEpisodeForm, CreateTitleForm, LoginForm } from "./forms";
+import { adminLogoutAction } from "./actions";
+import { CreateTitleForm, LibraryItemCard, LoginForm } from "./forms";
 
 export const dynamic = "force-dynamic";
 
@@ -67,56 +67,7 @@ export default async function AdminPage() {
         ) : (
           <ul className="space-y-4">
             {titles.map((item) => (
-              <li
-                key={item.id}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-4"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-zinc-500">
-                      {item.kind}
-                      {item.year ? ` · ${item.year}` : ""}
-                    </p>
-                    <h3 className="text-lg font-medium">{item.title}</h3>
-                    <p className="mt-1 text-sm text-zinc-400">
-                      {item.videos.length} file
-                      {item.videos.length === 1 ? "" : "s"}
-                    </p>
-                    <Link
-                      href={`/watch/${item.id}`}
-                      className="mt-2 inline-block text-sm text-zinc-300 underline-offset-2 hover:underline"
-                    >
-                      Open watch page
-                    </Link>
-                  </div>
-                  <form action={deleteTitleAction}>
-                    <input type="hidden" name="title_id" value={item.id} />
-                    <button
-                      type="submit"
-                      className="rounded-lg border border-red-900/60 px-3 py-1.5 text-sm text-red-300"
-                    >
-                      Delete
-                    </button>
-                  </form>
-                </div>
-
-                {item.videos.length > 0 ? (
-                  <ul className="mt-3 space-y-1 text-sm text-zinc-400">
-                    {item.videos.map((video) => (
-                      <li key={video.id}>
-                        {item.kind === "series"
-                          ? `S${video.season_number ?? "?"}E${video.episode_number ?? "?"} · `
-                          : ""}
-                        {video.label || "Video"}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-
-                {item.kind === "series" ? (
-                  <AddEpisodeForm titleId={item.id} />
-                ) : null}
-              </li>
+              <LibraryItemCard key={item.id} item={item} />
             ))}
           </ul>
         )}

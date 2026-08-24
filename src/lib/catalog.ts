@@ -7,7 +7,7 @@ export async function getPublishedTitles(): Promise<Title[]> {
     .from("titles")
     .select("*")
     .eq("is_published", true)
-    .order("created_at", { ascending: false });
+    .order("title", { ascending: true });
 
   if (error) throw error;
   return (data ?? []) as Title[];

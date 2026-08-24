@@ -20,7 +20,31 @@ export function extractDriveFileId(input: string): string | null {
   return null;
 }
 
-/** Google's embedded player — most reliable on phones and TVs. */
+/** Direct stream candidates for HTML5 <video> (tried in order). */
+export function driveStreamUrls(
+  fileId: string,
+  apiKey?: string | null,
+): string[] {
+  const urls: string[] = [];
+
+  // Best when Drive API is enabled + file is "Anyone with the link"
+  if (apiKey) {
+    urls.push(
+      `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${apiKey}`,
+    );
+  }
+
+  // Public Drive files often stream through googleusercontent
+  urls.push(
+    `https://lh3.googleusercontent.com/d/${fileId}`,
+    `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`,
+    `https://drive.google.com/uc?export=download&confirm=t&id=${fileId}`,
+  );
+
+  return urls;
+}
+
+/** Google embed — desktop fallback only (weak on mobile). */
 export function drivePreviewUrl(driveUrl: string): string | null {
   const fileId = extractDriveFileId(driveUrl);
   if (!fileId) return null;

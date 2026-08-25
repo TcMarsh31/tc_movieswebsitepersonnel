@@ -46,7 +46,7 @@ export default async function Home() {
               No movies yet
             </h2>
             <p className="mt-4 max-w-lg text-lg leading-8 text-zinc-400">
-              Add a film or series from the admin page with a Google Drive link.
+              Add a film or series from the admin page with an R2 video file.
             </p>
             <Link
               href="/admin"

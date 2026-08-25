@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DrivePlayer } from "@/components/drive-player";
+import { VideoPlayer } from "@/components/video-player";
 import { getTitleWithVideos } from "@/lib/catalog";
+import { resolvePlayableUrl } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,20 @@ export default async function WatchPage({ params, searchParams }: PageProps) {
 
   const selected =
     item.videos.find((video) => video.id === v) ?? item.videos[0] ?? null;
+
+  let playUrl: string | null = null;
+  let playError: string | null = null;
+
+  if (selected) {
+    try {
+      const resolved = await resolvePlayableUrl(selected.drive_url);
+      playUrl = resolved?.url ?? null;
+      if (!playUrl) playError = "Could not resolve a playable video URL.";
+    } catch (error) {
+      playError =
+        error instanceof Error ? error.message : "Could not prepare video.";
+    }
+  }
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-6 sm:px-6">
@@ -38,14 +53,11 @@ export default async function WatchPage({ params, searchParams }: PageProps) {
         ) : null}
       </header>
 
-      {selected ? (
-        <DrivePlayer
-          driveUrl={selected.drive_url}
-          title={selected.label || item.title}
-        />
+      {selected && playUrl ? (
+        <VideoPlayer src={playUrl} title={selected.label || item.title} />
       ) : (
         <p className="rounded-xl border border-zinc-800 p-6 text-zinc-400">
-          No video link yet for this title.
+          {playError ?? "No video link yet for this title."}
         </p>
       )}
 

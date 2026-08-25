@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { R2Uploader } from "@/components/r2-uploader";
 import type { TitleWithVideos, Video } from "@/lib/types";
 import {
   type ActionState,
@@ -100,21 +101,7 @@ export function CreateTitleForm() {
         />
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm text-zinc-400" htmlFor="drive_url">
-          Google Drive file link
-        </label>
-        <input
-          id="drive_url"
-          name="drive_url"
-          required
-          placeholder="https://drive.google.com/file/d/.../view"
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2"
-        />
-        <p className="mt-1 text-xs text-zinc-500">
-          File must be shared as &quot;Anyone with the link&quot;.
-        </p>
-      </div>
+      <R2Uploader name="drive_url" inputId="drive_url" />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div>
@@ -239,12 +226,7 @@ export function AddEpisodeForm({
       ) : (
         <input name="label" placeholder="Label (optional)" className={fieldClass} />
       )}
-      <input
-        name="drive_url"
-        required
-        placeholder="Google Drive link"
-        className={fieldClass}
-      />
+      <R2Uploader name="drive_url" />
       {state.message ? (
         <p className={`text-sm ${state.ok ? "text-emerald-400" : "text-red-400"}`}>
           {state.message}
@@ -434,12 +416,10 @@ function EditVideoForm({
           )}
 
           <div>
-            <label className="mb-1 block text-xs text-zinc-500">Google Drive link</label>
-            <input
+            <R2Uploader
               name="drive_url"
-              required
               defaultValue={video.drive_url}
-              className={fieldClass}
+              inputId={`drive_url_${video.id}`}
             />
           </div>
 

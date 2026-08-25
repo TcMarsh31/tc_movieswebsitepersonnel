@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdminLoggedIn, loginAdmin, logoutAdmin } from "@/lib/admin-auth";
-import { isValidDriveUrl } from "@/lib/drive";
+import { isValidMediaSource } from "@/lib/media";
 import { createServiceClient } from "@/lib/supabase/server";
 import type { TitleKind } from "@/lib/types";
 
@@ -57,11 +57,12 @@ export async function createTitleAction(
     return { ok: false, message: "Choose film or series." };
   }
   if (!title) return { ok: false, message: "Title is required." };
-  if (!driveUrl) return { ok: false, message: "Drive link is required." };
-  if (!isValidDriveUrl(driveUrl)) {
+  if (!driveUrl) return { ok: false, message: "Video file / R2 key is required." };
+  if (!isValidMediaSource(driveUrl)) {
     return {
       ok: false,
-      message: "That does not look like a Google Drive file link.",
+      message:
+        "Use an R2 object key (e.g. movies/film.mp4) or a full https video URL.",
     };
   }
   if (yearRaw && Number.isNaN(year)) {
@@ -130,11 +131,12 @@ export async function addEpisodeAction(
   const episodeRaw = String(formData.get("episode_number") ?? "").trim();
 
   if (!titleId) return { ok: false, message: "Missing series id." };
-  if (!driveUrl) return { ok: false, message: "Drive link is required." };
-  if (!isValidDriveUrl(driveUrl)) {
+  if (!driveUrl) return { ok: false, message: "Video file / R2 key is required." };
+  if (!isValidMediaSource(driveUrl)) {
     return {
       ok: false,
-      message: "That does not look like a Google Drive file link.",
+      message:
+        "Use an R2 object key (e.g. movies/film.mp4) or a full https video URL.",
     };
   }
 
@@ -229,11 +231,12 @@ export async function updateVideoAction(
   const isSeries = formData.get("is_series") === "true";
 
   if (!videoId) return { ok: false, message: "Missing video id." };
-  if (!driveUrl) return { ok: false, message: "Drive link is required." };
-  if (!isValidDriveUrl(driveUrl)) {
+  if (!driveUrl) return { ok: false, message: "Video file / R2 key is required." };
+  if (!isValidMediaSource(driveUrl)) {
     return {
       ok: false,
-      message: "That does not look like a Google Drive file link.",
+      message:
+        "Use an R2 object key (e.g. movies/film.mp4) or a full https video URL.",
     };
   }
 

@@ -1,0 +1,13 @@
+[
+  {
+    "AllowedOrigins": [
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+      "https://tc-movieswebsitepersonnel.vercel.app"
+    ],
+    "AllowedMethods": ["GET", "PUT", "HEAD", "POST"],
+    "AllowedHeaders": ["*"],
+    "ExposeHeaders": ["ETag", "etag", "Content-Type"],
+    "MaxAgeSeconds": 3600
+  }
+]

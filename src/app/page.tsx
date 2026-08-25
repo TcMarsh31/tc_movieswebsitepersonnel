@@ -9,6 +9,7 @@ export default async function Home() {
   let errorMessage: string | null = null;
 
   //test comment added
+  //test comment added
   try {
     titles = await getPublishedTitles();
   } catch (error) {
